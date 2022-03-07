@@ -143,13 +143,18 @@ end;
 
 procedure TfrmMain.ReadIDCard;
 var
-  Identity : TEIDIdentity;
-  Address : TEIDAddress;
+  // AG 07/03/2022
+  //Identity : TEIDIdentityA;
+  //Address : TEIDAddressA;
+  Identity : TEIDIdentityA;
+  Address : TEIDAddressA;
   Pic : TEIDPicture;
   MS : TMemoryStream;
   Img : TJPEGImage;
   idx : integer;
-  Street : string;
+  // AG 07/03/2022
+  //Street : string;
+  Street : AnsiString;
 begin
   edtlastName.Text  := '';
   edtFirstName.Text := '';
@@ -177,13 +182,20 @@ begin
      Exit;
    end;
 
-  FillChar(Identity, sizeof(TEIDIdentity), 0);
+  // AG 07/03/2022
+  //FillChar(Identity, sizeof(TEIDIdentity), 0);
+  FillChar(Identity, sizeof(TEIDIdentityA), 0);
 
 
-  if ReadIdentity(@Identity) then
+  // AG 07/03/2022
+  //if ReadIdentity(@Identity) then
+  if ReadIdentityA(@Identity) then
    begin
-     FillChar(Address, sizeof(TEIDAddress), 0);
-     ReadAddress(@Address);
+     // AG 07/03/2022
+     //FillChar(Address, sizeof(TEIDAddress), 0);
+     //ReadAddress(@Address);
+     FillChar(Address, sizeof(TEIDAddressA), 0);
+     ReadAddressA(@Address);
 
      edtlastName.Text := Identity.name;
      edtFirstName.Text := Identity.firstName1;
@@ -250,7 +262,9 @@ var
   cnt : integer;
   TotalReaders : integer;
   len : integer;
-  buffer : PChar;
+  // AG 07/03/2022
+  //buffer : PChar;
+  buffer : PAnsiChar;
 begin
   LoadUnknownImage;
   StartEngine;
@@ -258,9 +272,13 @@ begin
   Events.Items.Add(DateTimeToStr(Now) + ' ' + IntToStr(TotalReaders) + ' card readers detected');
   for cnt := 0 to TotalReaders - 1 do
     begin
-      len := GetReaderNameLen(cnt);
-      Buffer := AllocMem(len * sizeof(char));
-      GetReaderName(cnt, Buffer, len);
+      // AG 07/03/2022
+//      len := GetReaderNameLenA(cnt);
+//      Buffer := AllocMem(len * sizeof(Ansichar));
+//      GetReaderNameA(cnt, Buffer, len);
+      len := GetReaderNameLenA(cnt);
+      Buffer := AllocMem(len * sizeof(Ansichar));
+      GetReaderNameA(cnt, Buffer, len);
       Events.Items.Add(DateTimeToStr(Now) + ' ' + Buffer);
       FreeMem(Buffer);
     end;
